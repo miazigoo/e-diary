@@ -41,14 +41,13 @@ def fix_chastisements(schoolkid):
 
 def create_commendation(name='', subject=''):
     """ Записать похвалу """
-    try:
-        schoolkid = get_schoolkid(name)
-        lessson = Lesson.objects.filter(year_of_study=schoolkid.year_of_study, group_letter=schoolkid.group_letter,
-                                     subject__title__contains=subject).order_by('-date').first()
-        random_commendation = random.choice(COMMENDATIONS)
-        Commendation.objects.create(schoolkid=schoolkid, subject=lessson.subject,
-                                    teacher=lessson.teacher, created=lessson.date,
-                                    text=random_commendation)
-        return 'О, молодой хакер, похвала за урок записана! (✪‿✪)ノ '
-    except Lesson.DoesNotExist:
-        return 'Ученика или предмета не существует  ｡ﾟ･ (>﹏<) ･ﾟ｡ '
+    schoolkid = get_schoolkid(name)
+    lessson = Lesson.objects.filter(year_of_study=schoolkid.year_of_study, group_letter=schoolkid.group_letter,
+                                 subject__title__contains=subject).order_by('-date').first()
+    if not lessson:
+        return 'Такого предмета не существует  ｡ﾟ･ (>﹏<) ･ﾟ｡ '
+    random_commendation = random.choice(COMMENDATIONS)
+    Commendation.objects.create(schoolkid=schoolkid, subject=lessson.subject,
+                                teacher=lessson.teacher, created=lessson.date,
+                                text=random_commendation)
+    return 'О, молодой хакер, похвала за урок записана! (✪‿✪)ノ '
