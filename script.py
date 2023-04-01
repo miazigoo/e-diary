@@ -2,7 +2,7 @@ from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
                                Schoolkid, Subject)
 import random
 
-COMMENDATION = ['Молодец!', 'Отлично!', 'Хорошо!',
+COMMENDATIONS = ['Молодец!', 'Отлично!', 'Хорошо!',
                 'Гораздо лучше, чем я ожидал!', 'Ты меня приятно удивил!',
                 'Великолепно!', 'Прекрасно!', 'Ты меня очень обрадовал!',
                 'Именно этого я давно ждал от тебя!', 'Сказано здорово – просто и ясно!',
@@ -46,7 +46,7 @@ def create_commendation(name='', subject=''):
         print(schoolkid)
         less = Lesson.objects.filter(year_of_study=schoolkid.year_of_study, group_letter=schoolkid.group_letter,
                                      subject__title__contains=subject).order_by('-date').first()
-        random_commendation = random.choice(COMMENDATION)
+        random_commendation = random.choice(COMMENDATIONS)
         print(random_commendation)
         Commendation.objects.create(schoolkid=schoolkid, subject=less.subject,
                                     teacher=less.teacher, created=less.date,
