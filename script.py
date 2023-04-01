@@ -21,14 +21,9 @@ def fix_marks(schoolkid):
 
 def fix_chastisements(schoolkid):
     """ Удалить замечания """
-    try:
-        child = get_schoolkid(schoolkid)
-        chastisements = Chastisement.objects.filter(schoolkid=child)
-        for chast in chastisements:
-            chast.delete()
-        return 'Поздравляю! Замечания удалены (◑‿◐)'
-    except MultipleObjectsReturned:
-        return "Учеников с похожим именем больше одного  (⋟﹏⋞) . Сделайте запрос более подробным."
+    child = get_schoolkid(schoolkid)
+    Chastisement.objects.filter(schoolkid=child).delete()
+    return 'Поздравляю! Замечания удалены (◑‿◐)'
 
 
 def create_commendation(name='', subject=''):
