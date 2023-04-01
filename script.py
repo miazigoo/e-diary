@@ -43,11 +43,11 @@ def create_commendation(name='', subject=''):
     """ Записать похвалу """
     try:
         schoolkid = get_schoolkid(name)
-        less = Lesson.objects.filter(year_of_study=schoolkid.year_of_study, group_letter=schoolkid.group_letter,
+        lessson = Lesson.objects.filter(year_of_study=schoolkid.year_of_study, group_letter=schoolkid.group_letter,
                                      subject__title__contains=subject).order_by('-date').first()
         random_commendation = random.choice(COMMENDATIONS)
-        Commendation.objects.create(schoolkid=schoolkid, subject=less.subject,
-                                    teacher=less.teacher, created=less.date,
+        Commendation.objects.create(schoolkid=schoolkid, subject=lessson.subject,
+                                    teacher=lessson.teacher, created=lessson.date,
                                     text=random_commendation)
         return 'О, молодой хакер, похвала за урок записана! (✪‿✪)ノ '
     except Lesson.DoesNotExist:
