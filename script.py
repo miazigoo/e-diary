@@ -1,10 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.exceptions import MultipleObjectsReturned
-from models import Lesson
-from models import Schoolkid
-from models import Commendation
-from models import Chastisement
-from models import Mark
+from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
+                               Schoolkid, Subject)
 import random
 
 
@@ -12,22 +7,16 @@ def get_schoolkid(schoolkid):
     try:
         child = Schoolkid.objects.filter(full_name__contains=schoolkid).get()
         return child
-    except MultipleObjectsReturned:
-        return "Учеников с похожим именем больше одного  ༼☯﹏☯༽ . Сделайте запрос более подробным."
-
+    except Schoolkid.MultipleObjectsReturned and Schoolkid.DoesNotExist:
+        print('Такого ученика не существует в этой школе. Либо Учеников с похожим именем больше одного.')
+        quit()
 
 
 def fix_marks(schoolkid):
     """ Изменить плохие оценки ученика на 5 """
-    try:
-        child = get_schoolkid(schoolkid)
-        bad_marks = Mark.objects.filter(schoolkid=child, points_in=[2, 3])
-        for mark in bad_marks:
-            mark.points = 5
-            mark.save()
-        return 'Поздравляю! Оценки исправлены! (^◔ᴥ◔^) '
-    except MultipleObjectsReturned:
-        return "Учеников с похожим именем больше одного  ༼☯﹏☯༽ . Сделайте запрос более подробным."
+    child = get_schoolkid(schoolkid)
+    Mark.objects.filter(schoolkid=child, points__in=[2, 3]).update(points=5)
+    return 'Поздравляю! Оценки исправлены! (^◔ᴥ◔^) '
 
 
 def fix_chastisements(schoolkid):
@@ -67,7 +56,7 @@ def create_commendation(name='', subject=''):
                                     teacher=less.teacher, created=less.date,
                                     text=random_commendation)
         return 'О, молодой хакер, похвала за урок записана! (✪‿✪)ノ '
-    except ObjectDoesNotExist:
+    except Lesson.DoesNotExist:
         return 'Ученика или предмета не существует  ｡ﾟ･ (>﹏<) ･ﾟ｡ '
 
 
