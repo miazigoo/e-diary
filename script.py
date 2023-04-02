@@ -20,7 +20,7 @@ def get_schoolkid(schoolkid):
     try:
         child = Schoolkid.objects.filter(full_name__contains=schoolkid).get()
         return child
-    except Schoolkid.MultipleObjectsReturned and Schoolkid.DoesNotExist:
+    except (Schoolkid.MultipleObjectsReturned, Schoolkid.DoesNotExist):
         print('Такого ученика не существует в этой школе. Либо Учеников с похожим именем больше одного.')
         quit()
 
